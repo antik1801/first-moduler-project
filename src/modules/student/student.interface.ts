@@ -14,12 +14,11 @@ export type Username = {
 };
 
 export type Localgardian = {
-    name: string;
-    occupation: string;
-    contactNo: string;
-    address: string;
-
-}
+  name: string;
+  occupation: string;
+  contactNo: string;
+  address: string;
+};
 
 export type Student = {
   id: string;
@@ -35,5 +34,5 @@ export type Student = {
   gardian: Gardian;
   localGardian: Localgardian;
   profileImg?: string;
-  isActive: "active" | "blocked";
+  isActive: 'active' | 'blocked';
 };
