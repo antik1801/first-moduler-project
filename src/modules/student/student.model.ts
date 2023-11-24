@@ -1,8 +1,15 @@
-import { Schema, model } from 'mongoose';
-import { Gardian, Localgardian, Student, Username } from './student.interface';
+import { Model, Schema, model } from 'mongoose';
+import {
+  TGardian,
+  TLocalgardian,
+  TStudent,
+  // StudentMethod,
+  // StudentModel,
+  TUsername,
+} from './student.interface';
 import validator from 'validator';
 
-const userNameSchema = new Schema<Username>({
+const userNameSchema = new Schema<TUsername>({
   firstname: {
     type: String,
     required: [true, 'First Name Required'],
@@ -31,7 +38,7 @@ const userNameSchema = new Schema<Username>({
   },
 });
 
-const gardianSchema = new Schema<Gardian>({
+const gardianSchema = new Schema<TGardian>({
   fatherName: {
     type: String,
     required: [true, 'Fathers name required'],
@@ -62,7 +69,7 @@ const gardianSchema = new Schema<Gardian>({
   },
 });
 
-const localGardianSchema = new Schema<Localgardian>({
+const localGardianSchema = new Schema<TLocalgardian>({
   name: {
     type: String,
     trim: true,
@@ -84,7 +91,7 @@ const localGardianSchema = new Schema<Localgardian>({
   },
 });
 
-const studentSchema = new Schema<Student>({
+const studentSchema = new Schema<TStudent, StudentModel>({
   id: { type: String, required: true, unique: true },
   name: {
     type: userNameSchema,
@@ -140,4 +147,34 @@ const studentSchema = new Schema<Student>({
   },
 });
 
-export const StudentModel = model<Student>('Student', studentSchema);
+// pre save middleware/hook
+studentSchema.pre('save', function () {
+  console.log(this, 'Pre hook : we will save the data');
+});
+
+// post middleware
+studentSchema.post('save', function () {
+  console.log(this, 'We saved our data');
+});
+
+// for creating static model
+interface StudentModel extends Model<TStudent> {
+  isUserExists(id: string): Promise<TStudent | null>;
+}
+
+// studentSchema.static.isUserExists = async function(id: string){
+//   const existingUser = await Student.findOne({id});
+//   return existingUser;
+// }
+
+// creating a custom made instance method to check where user exists or not
+//** instance method starts */
+
+studentSchema.methods.isUserExists = async function (id: string) {
+  const existingUser = await Student.findOne({ id });
+  return existingUser;
+};
+
+//** instance method ends */
+
+export const Student = model<TStudent, StudentModel>('Student', studentSchema);
