@@ -1,5 +1,7 @@
 // import { Model } from 'mongoose';
 
+import { Types } from "mongoose";
+
 export type TGardian = {
   fatherName: string;
   fatherOccupation: string;
@@ -23,7 +25,9 @@ export type TLocalgardian = {
 };
 
 export type TStudent = {
+  studentData: import("mongoose").Types.ObjectId;
   id: string;
+  user: Types.ObjectId;
   name: TUsername;
   gender: 'male' | 'female' | 'others';
   email: string;
@@ -35,8 +39,8 @@ export type TStudent = {
   parmanentAddress: string;
   gardian: TGardian;
   localGardian: TLocalgardian;
+  admissionSemester: Types.ObjectId;
   profileImg?: string;
-  isActive?: 'active' | 'blocked';
 };
 
 // for creating static

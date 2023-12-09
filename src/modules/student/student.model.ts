@@ -92,10 +92,16 @@ const localGardianSchema = new Schema<TLocalgardian>({
 });
 
 const studentSchema = new Schema<TStudent, StudentModel>({
-  id: { type: String, required: true, unique: true },
+  id: { type: String, required: [true,"Id is required"], unique: true },
+  user: {
+    type: Schema.Types.ObjectId,
+    required: [true,"userID is required"],
+    unique: true,
+    ref: 'User'
+  },
   name: {
     type: userNameSchema,
-    required: [true, 'Name required'],
+    required: [true, 'Name is required']
   },
   gender: {
     type: String,
@@ -139,12 +145,12 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     type: localGardianSchema,
     required: true,
   },
-  profileImg: { type: String },
-  isActive: {
-    type: String,
-    enum: ['active', 'blocked'],
-    default: 'active',
+  admissionSemester: {
+    type: Schema.Types.ObjectId,
+    ref:'AcademicSemester',
+    required: [true, "Admission semester is required"],
   },
+  profileImg: { type: String },
 });
 
 // pre save middleware/hook
